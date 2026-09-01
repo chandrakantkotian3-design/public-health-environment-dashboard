@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071227">
+<title>Community Pulse — Public Health & Environment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="noise"></div>
+
+<header class="navbar">
+  <div class="container nav-inner">
+    <a href="#home" class="brand"><span class="brand-mark">CP</span><span>Community <b>Pulse</b></span></a>
+    <nav>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#insights">Insights</a>
+      <a href="#survey">Survey</a>
+      <a href="#about">About</a>
+    </nav>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLScyu5ZF4WK4HTHbKuid-fpvJYyaF5fv4jjavvcgMW4nqzDDLQ/viewform?usp=header" target="_blank" rel="noopener" class="nav-cta">Open Google Form ↗</a>
+  </div>
+</header>
+
+<main>
+<section class="hero" id="home">
+  <div class="orb orb-a"></div><div class="orb orb-b"></div><div class="orb orb-c"></div>
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <div class="pill"><span class="live-dot"></span> Live community dataset</div>
+      <h1>Turning community responses into <span>clear visual stories.</span></h1>
+      <p>Explore how people think about public health, pollution, safety and data visualization. The dashboard begins with 6 real survey responses and updates whenever a new visitor submits the form.</p>
+      <div class="hero-actions">
+        <a href="#dashboard" class="button button-primary">Explore dashboard <span>→</span></a>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLScyu5ZF4WK4HTHbKuid-fpvJYyaF5fv4jjavvcgMW4nqzDDLQ/viewform?usp=header" target="_blank" rel="noopener" class="button button-form">Open Google Form <span>↗</span></a>
+        <a href="#survey" class="button button-secondary">Website survey</a>
+      </div>
+      <div class="trust-row"><span>Anonymous public statistics</span><i></i><span>Live updates</span><i></i><span>Educational field project</span></div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="glass-panel hero-panel">
+        <div class="panel-top"><div><small>LIVE OVERVIEW</small><h3>Community snapshot</h3></div><span class="status">● Updated</span></div>
+        <div class="mini-grid">
+          <div class="mini-card"><span>Total responses</span><strong id="heroTotal">6</strong><em>people</em></div>
+          <div class="mini-card"><span>Top concern</span><strong id="heroTopConcern">—</strong><em id="heroTopPercent">—</em></div>
+          <div class="mini-card wide"><span>Charts make information easier?</span><div class="progress-row"><strong id="heroChartsYes">—</strong><div class="progress"><b id="heroProgress"></b></div></div></div>
+        </div>
+        <div class="spark-wrap"><div class="spark-label"><span>Response activity</span><small>cumulative</small></div><canvas id="heroSpark"></canvas></div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-cue">SCROLL TO EXPLORE <span>↓</span></div>
+</section>
+
+
+<section class="source-section">
+  <div class="container">
+    <div class="source-banner">
+      <div class="source-copy">
+        <div class="source-icon">GF</div>
+        <div>
+          <span>ORIGINAL GOOGLE FORM</span>
+          <h3>Prefer filling the original form?</h3>
+          <p>You can submit through the Google Form as well. The dashboard currently starts with the 6 responses you already exported from it.</p>
+        </div>
+      </div>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScyu5ZF4WK4HTHbKuid-fpvJYyaF5fv4jjavvcgMW4nqzDDLQ/viewform?usp=header" target="_blank" rel="noopener" class="source-button">Open Google Form <b>↗</b></a>
+    </div>
+  </div>
+</section>
+
+<section class="dashboard-section" id="dashboard">
+  <div class="container">
+    <div class="section-heading">
+      <div><div class="kicker">01 / LIVE DASHBOARD</div><h2>What the community is saying</h2><p>Every number below is calculated directly from submitted responses.</p><div class="dataset-meta"><span>6 imported Google Form responses</span><span>+ website submissions</span></div></div>
+      <button id="refreshBtn" class="refresh-btn">↻ Refresh data</button>
+    </div>
+
+    <div class="stat-grid">
+      <article class="stat-card violet"><div class="stat-icon">◎</div><span>Total respondents</span><strong id="totalResponses">0</strong><small>All recorded survey responses</small></article>
+      <article class="stat-card cyan"><div class="stat-icon">◒</div><span>Most common concern</span><strong class="text-stat" id="topConcern">—</strong><small id="topConcernSub">—</small></article>
+      <article class="stat-card green"><div class="stat-icon">✓</div><span>Support clearer charts</span><strong id="chartSupport">0%</strong><small>Answered “Yes”</small></article>
+      <article class="stat-card orange"><div class="stat-icon">⌁</div><span>Feel safe / very safe</span><strong id="safeShare">0%</strong><small>Current response share</small></article>
+    </div>
+
+    <div class="dashboard-grid">
+      <article class="chart-card span-7">
+        <div class="chart-head"><div><span class="tag tag-purple">COMMUNITY PRIORITIES</span><h3>Which issue concerns people most?</h3></div><div class="chart-note">All responses</div></div>
+        <div class="chart-box tall"><canvas id="concernChart"></canvas></div>
+      </article>
+
+      <article class="chart-card span-5">
+        <div class="chart-head"><div><span class="tag tag-green">DEMOGRAPHICS</span><h3>Respondents by age</h3></div></div>
+        <div class="chart-box tall"><canvas id="ageChart"></canvas></div>
+      </article>
+
+      <article class="chart-card span-4">
+        <div class="chart-head"><div><span class="tag tag-cyan">ENVIRONMENT</span><h3>Air quality rating</h3></div></div>
+        <div class="chart-box"><canvas id="airChart"></canvas></div>
+      </article>
+
+      <article class="chart-card span-4">
+        <div class="chart-head"><div><span class="tag tag-orange">LOCAL ISSUES</span><h3>Environmental issue</h3></div></div>
+        <div class="chart-box"><canvas id="environmentChart"></canvas></div>
+      </article>
+
+      <article class="chart-card span-4">
+        <div class="chart-head"><div><span class="tag tag-pink">PUBLIC SAFETY</span><h3>How safe do people feel?</h3></div></div>
+        <div class="chart-box"><canvas id="safetyChart"></canvas></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="insights-section" id="insights">
+  <div class="container">
+    <div class="section-heading light">
+      <div><div class="kicker">02 / MORE INSIGHTS</div><h2>Information habits & visualization preferences</h2><p>Understanding how respondents consume and understand information can help awareness campaigns communicate more effectively.</p></div>
+    </div>
+    <div class="insights-grid">
+      <article class="dark-card"><div class="dark-head"><span>Information source</span><strong id="infoSourceTop">—</strong></div><div class="chart-box dark-chart"><canvas id="infoSourceChart"></canvas></div></article>
+      <article class="dark-card"><div class="dark-head"><span>Easiest visualization</span><strong id="vizTop">—</strong></div><div class="chart-box dark-chart"><canvas id="vizChart"></canvas></div></article>
+      <article class="dark-card"><div class="dark-head"><span>Data visualization helps decisions</span><strong id="decisionYes">—</strong></div><div class="chart-box dark-chart"><canvas id="decisionChart"></canvas></div></article>
+    </div>
+
+    <div class="insight-strip">
+      <div class="insight-icon">✦</div>
+      <div><span>LIVE INSIGHT</span><p id="liveInsight">Loading community insight…</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="survey-section" id="survey">
+  <div class="container survey-layout">
+    <div class="survey-copy">
+      <div class="kicker">03 / PARTICIPATE</div>
+      <h2>Add your voice to the dashboard.</h2>
+      <p>There is no account or login. You can either submit directly on this website, or use your original Google Form.</p>
+      <a class="inline-form-link" href="https://docs.google.com/forms/d/e/1FAIpQLScyu5ZF4WK4HTHbKuid-fpvJYyaF5fv4jjavvcgMW4nqzDDLQ/viewform?usp=header" target="_blank" rel="noopener">Open the Google Form instead ↗</a>
+      <div class="flow">
+        <div><b>1</b><span><strong>Fill the survey</strong><small>Answer based on your experience.</small></span></div>
+        <div><b>2</b><span><strong>Submit securely</strong><small>Your response is saved by the project backend.</small></span></div>
+        <div><b>3</b><span><strong>Dashboard updates</strong><small>Charts recalculate automatically.</small></span></div>
+      </div>
+      <div class="privacy-box"><span>🔒</span><p><strong>Privacy note</strong>Your name and email are never displayed on the public dashboard. They are collected only to identify survey submissions for the field project.</p></div>
+    </div>
+
+    <form id="surveyForm" class="survey-card">
+      <div class="form-title"><div><span>COMMUNITY SURVEY</span><h3>Public Health & Environmental Data</h3></div><b id="formStepText">About 2 minutes</b></div>
+
+      <div class="form-grid">
+        <label class="field"><span>Name <em>optional</em></span><input name="name" maxlength="60" placeholder="Your name"></label>
+        <label class="field"><span>Email address</span><input name="email" type="email" maxlength="120" required placeholder="you@example.com"></label>
+        <label class="field"><span>Area / locality <em>optional</em></span><input name="area" maxlength="80" placeholder="e.g. Bhandup"></label>
+        <label class="field"><span>Age group</span><select name="ageGroup" required><option value="">Choose one</option><option>Below 18</option><option>18 - 25</option><option>26 - 40</option><option>41 - 60</option><option>Above 60</option></select></label>
+
+        <label class="field full"><span>Which type of issue concerns you the most?</span><select name="mainConcern" required><option value="">Choose one</option><option>Air pollution</option><option>Water pollution</option><option>COVID-19 / Public health</option><option>Crime / Public safety</option><option>Waste management</option></select></label>
+
+        <label class="field"><span>How would you rate the air quality in your area?</span><select name="airQuality" required><option value="">Choose one</option><option>Very Good</option><option>Good</option><option>Average</option><option>Poor</option><option>Very Poor</option></select></label>
+        <label class="field"><span>How frequently do you notice pollution?</span><select name="pollutionFrequency" required><option value="">Choose one</option><option>Never</option><option>Rarely</option><option>Sometimes</option><option>Often</option><option>Always</option></select></label>
+
+        <label class="field full"><span>How concerned are you about infectious diseases such as COVID-19?</span><select name="diseaseConcern" required><option value="">Choose one</option><option>Not concerned</option><option>Slightly concerned</option><option>Neutral</option><option>Concerned</option><option>Very concerned</option></select></label>
+
+        <label class="field"><span>How often do you check health-related information?</span><select name="healthInfoFrequency" required><option value="">Choose one</option><option>Daily</option><option>Sometimes</option><option>Rarely</option><option>Never</option></select></label>
+        <label class="field"><span>Which environmental issue affects your area most?</span><select name="environmentIssue" required><option value="">Choose one</option><option>Air pollution</option><option>Water pollution</option><option>Noise pollution</option><option>Plastic waste</option><option>Improper waste disposal</option></select></label>
+
+        <label class="field"><span>Main cause of air pollution in your area?</span><select name="airPollutionCause" required><option value="">Choose one</option><option>Vehicles</option><option>Industries</option><option>Constructions</option><option>Waste burning</option><option>Other</option></select></label>
+        <label class="field"><span>How often do you see improper waste disposal?</span><select name="wasteFrequency" required><option value="">Choose one</option><option>Never</option><option>Rarely</option><option>Sometimes</option><option>Often</option><option>Very often</option><option>Daily</option></select></label>
+
+        <label class="field"><span>Your usual source of public information?</span><select name="infoSource" required><option value="">Choose one</option><option>Government websites</option><option>News</option><option>Social media</option><option>Friends / Family</option><option>Other</option></select></label>
+        <label class="field"><span>Do charts make public information easier?</span><select name="chartsUseful" required><option value="">Choose one</option><option>Yes</option><option>No</option><option>Not sure</option></select></label>
+
+        <label class="field"><span>Which visualization is easiest to understand?</span><select name="visualizationType" required><option value="">Choose one</option><option>Bar chart</option><option>Pie chart</option><option>Line chart</option><option>Infographic</option><option>Map</option></select></label>
+        <label class="field"><span>Can data visualization help communities make better decisions?</span><select name="dataVizDecision" required><option value="">Choose one</option><option>Yes</option><option>No</option><option>Maybe</option></select></label>
+
+        <label class="field"><span>Concern about drinking water quality?</span><select name="waterConcern" required><option value="">Choose one</option><option>Not concerned</option><option>Neutral</option><option>Concerned</option><option>Very concerned</option></select></label>
+        <label class="field"><span>How safe do you feel in your local area?</span><select name="safety" required><option value="">Choose one</option><option>Very safe</option><option>Safe</option><option>Neutral</option><option>Unsafe</option><option>Very unsafe</option></select></label>
+
+        <label class="consent full"><input type="checkbox" name="consent" required><span>I agree that my responses may be used for this educational field project. Public visualizations will show grouped statistics only.</span></label>
+      </div>
+
+      <button class="submit-button" type="submit"><span>Submit response</span><b>→</b></button>
+      <p class="form-message" id="formMessage"></p>
+    </form>
+  </div>
+</section>
+
+
+<section class="method-section">
+  <div class="container method-grid">
+    <div class="method-card">
+      <span class="method-num">01</span>
+      <div><b>Collect</b><p>Responses come from the original Google Form and the website survey.</p></div>
+    </div>
+    <div class="method-card">
+      <span class="method-num">02</span>
+      <div><b>Store</b><p>Website submissions are saved by the backend into the project dataset.</p></div>
+    </div>
+    <div class="method-card">
+      <span class="method-num">03</span>
+      <div><b>Visualize</b><p>Charts recalculate automatically from the saved responses.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="about-section" id="about">
+  <div class="container about-grid">
+    <div><div class="kicker">04 / ABOUT THE PROJECT</div><h2>Simple data. Better understanding.</h2></div>
+    <div><p>This educational project demonstrates how public health and environmental survey data can be transformed into readable charts, trends and community insights. The first six records come from the original survey export; future website submissions are added to the same dataset.</p><p class="source-note">Survey responses are self-reported and should not be treated as official medical, environmental or crime statistics.</p></div>
+  </div>
+</section>
+</main>
+
+<footer><div class="container footer-inner"><div class="brand footer-brand"><span class="brand-mark">CP</span><span>Community <b>Pulse</b></span></div><p>Data Visualization of Public Health & Environmental Data</p><span>Field Project • 2026</span></div></footer>
+
+<div class="success-modal hidden" id="successModal"><div class="success-card"><div class="success-icon">✓</div><span>RESPONSE RECORDED</span><h2>Thanks for participating!</h2><p>Your answers have been added to the community dataset and the dashboard has been updated.</p><div class="success-stats"><div><small>Total responses now</small><strong id="successTotal">—</strong></div><div><small>Your main concern</small><strong id="successConcern">—</strong></div></div><button id="viewUpdated" class="submit-button"><span>View updated dashboard</span><b>↑</b></button></div></div>
+
+<script src="script.js"></script>
+</body>
+</html>
