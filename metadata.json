@@ -1,0 +1,8 @@
+{
+  "name": "Community Pulse Dashboard",
+  "description": "Live public health and environmental survey data visualization dashboard",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

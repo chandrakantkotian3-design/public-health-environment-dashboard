@@ -2,13 +2,40 @@ require("dotenv").config();
 const express=require("express"),fs=require("fs"),path=require("path");
 const app=express();
 const PORT=process.env.PORT||3000;
-const DB=path.join(__dirname,"data","db.json");
+
+function getDbPath(){
+  const candidates=[
+    path.join(__dirname,"data","db.json"),
+    path.join(__dirname,"db.json")
+  ];
+  for(const p of candidates){
+    if(fs.existsSync(p)) return p;
+  }
+  return path.join(__dirname,"db.json");
+}
+
 app.use(express.json({limit:"100kb"}));
 app.use(express.static(__dirname));
 
 const clean=(v,n=160)=>String(v||"").trim().slice(0,n);
-function readDB(){return JSON.parse(fs.readFileSync(DB,"utf8"))}
-function writeDB(d){fs.writeFileSync(DB,JSON.stringify(d,null,2))}
+function readDB(){
+  const p=getDbPath();
+  try{
+    if(!fs.existsSync(p)) return {responses:[]};
+    return JSON.parse(fs.readFileSync(p,"utf8"));
+  }catch(err){
+    console.error("Error reading database:",err);
+    return {responses:[]};
+  }
+}
+function writeDB(d){
+  const p=getDbPath();
+  const dir=path.dirname(p);
+  if(!fs.existsSync(dir)){
+    fs.mkdirSync(dir,{recursive:true});
+  }
+  fs.writeFileSync(p,JSON.stringify(d,null,2));
+}
 function counts(rows,key){
   const o={};
   for(const r of rows){
